@@ -4,15 +4,38 @@ sinonChai       = require 'sinon-chai'
 should          = chai.should()
 expect          = chai.expect
 EncodingNoSQL   = require '../src/nosql-encoding'
+AbstractNoSQL   = require 'abstract-nosql'
 Errors          = require 'abstract-object/Error'
 util            = require 'abstract-object/util'
 Codec           = require 'buffer-codec'
 EncodingIterator= require("encoding-iterator")
 inherits        = util.inherits
+isInheritedFrom = util.isInheritedFrom
 setImmediate    = setImmediate || process.nextTick
 InvalidArgumentError = Errors.InvalidArgumentError
 
 chai.use(sinonChai)
+
+describe "Add Encoding to a NoSQL Class", ->
+  class FakeDB
+    inherits FakeDB, AbstractNoSQL
+    constructor: ->super
+    _openSync: ->true
+    _closeSync:->true
+    _isExistsSync: sinon.spy (key)->true
+    _getBufferSync: sinon.spy ->
+    _getSync: sinon.spy (key)->key
+    _putSync: sinon.spy (key,value)->true
+    _delSync: sinon.spy (key)->true
+    _batchSync: sinon.spy ->true
+
+  it "should add encoding to a NoSQL Database", ->
+    isInheritedFrom(FakeDB, EncodingNoSQL).should.not.be.true
+    EncodingNoSQL(FakeDB)
+    isInheritedFrom(FakeDB, EncodingNoSQL).should.be.equal FakeDB
+  it "should raise error when adding a illegal NoSQL class", ->
+    class IllegalDB
+    should.throw EncodingNoSQL.bind(null, IllegalDB), 'class should be inherited from AbstractNoSQL'
 
 describe "EncodingNoSQL", ->
   class FakeIterator

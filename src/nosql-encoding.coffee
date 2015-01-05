@@ -1,6 +1,7 @@
 # Copyright (c) 2014 Riceball LEE, MIT License
 #xtend                 = require("xtend")
 util                  = require("abstract-object/lib/util")
+Errors                = require("abstract-object/Error")
 AbstractNoSQL         = require("abstract-nosql")
 Codec                 = require("buffer-codec")
 try
@@ -10,6 +11,7 @@ inherits              = util.inherits
 isInheritedFrom       = util.isInheritedFrom
 inheritsDirectly      = util.inheritsDirectly
 isArray               = util.isArray
+InvalidArgumentError  = Errors.InvalidArgumentError
 
 module.exports = class EncodingNoSQL
   inherits EncodingNoSQL, AbstractNoSQL
@@ -25,6 +27,8 @@ module.exports = class EncodingNoSQL
           if vIteratorClass and vIteratorClass isnt EncodingIterator
             inheritsDirectly vIteratorClass, EncodingIterator
         return aClass
+      else
+        throw new InvalidArgumentError("class should be inherited from AbstractNoSQL")
     super
   #mergeOptions: (options, opts1, opts2)->xtend(@_options, options, opts1, opts2)
   keyEncoding: (options)->
