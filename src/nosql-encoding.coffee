@@ -2,7 +2,10 @@
 #xtend                 = require("xtend")
 util                  = require("abstract-object/lib/util")
 AbstractNoSQL         = require("abstract-nosql")
-#try AbstractIterator  = require("abstract-iterator")
+Codec                 = require("buffer-codec")
+try
+  EncodingIterator    = require("encoding-iterator")
+  AbstractIterator    = EncodingIterator.super_
 inherits              = util.inherits
 isInheritedFrom       = util.isInheritedFrom
 inheritsDirectly      = util.inheritsDirectly
@@ -13,9 +16,14 @@ module.exports = class EncodingNoSQL
 
   constructor: (aClass)->
     if (this not instanceof EncodingNoSQL)
-      aParentClass = isInheritedFrom aClass, AbstractNoSQL
-      if aParentClass
-        inheritsDirectly aParentClass, EncodingNoSQL if aParentClass isnt EncodingNoSQL
+      vParentClass = isInheritedFrom aClass, AbstractNoSQL
+      if vParentClass
+        if vParentClass isnt EncodingNoSQL
+          inheritsDirectly vParentClass, EncodingNoSQL
+          vIteratorClass = aClass::IteratorClass
+          vIteratorClass = isInheritedFrom vIteratorClass, AbstractIterator if vIteratorClass and EncodingIterator
+          if vIteratorClass and vIteratorClass isnt EncodingIterator
+            inheritsDirectly vIteratorClass, EncodingIterator
         return aClass
     super
   #mergeOptions: (options, opts1, opts2)->xtend(@_options, options, opts1, opts2)
@@ -39,10 +47,10 @@ module.exports = class EncodingNoSQL
     if isOpened and options
       encoding = options.keyEncoding
       encoding = Codec(encoding) if encoding
-      options.keyEncoding = encoding if encoding
+      options.keyEncoding = encoding
       encoding = options.valueEncoding
       encoding = Codec(encoding) if encoding
-      options.valueEncoding = encoding if encoding
+      options.valueEncoding = encoding
     else if not options?
       @_options = {}
   isExistsSync: (key, options) ->
@@ -51,27 +59,28 @@ module.exports = class EncodingNoSQL
     super(key, options)
   getSync: (key, options) ->
     encoding = @keyEncoding options
-    key = encoding.encode(key) if keyEncoding
+    key = encoding.encode(key) if encoding
     result = super(key, options)
     encoding = @valueEncoding options
     result = encoding.decode(result) if encoding
     result
   getBufferSync: (key, destBuffer, options) ->
     encoding = @keyEncoding options
-    key = encoding.encode(key) if keyEncoding
+    key = encoding.encode(key) if encoding
     super(key, destBuffer, options)
   mGetSync: (keys, options) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
-    keys = keys.map keyEncoding.encode if keyEncoding
+    keys = keys.map keyEncoding.encode.bind(keyEncoding) if keyEncoding
     result = super(keys, options)
-    if valueEncoding
-      if (options.keys)
+    options ||= {}
+    if options.keys isnt false
+      if valueEncoding or keyEncoding
         result.map (item)->
           item.key = keyEncoding.decode item.key if keyEncoding
           item.value = valueEncoding.decode item.value if valueEncoding
-      else
-        result = result.map valueEncoding.encode
+    else
+      result = result.map valueEncoding.encode.bind(valueEncoding) if valueEncoding
     result
   putSync: (key, value, options) ->
     keyEncoding = @keyEncoding options
@@ -104,7 +113,7 @@ module.exports = class EncodingNoSQL
     super(key, options, callback)
   getAsync: (key, options, callback) ->
     encoding = @keyEncoding options
-    key = encoding.encode(key) if keyEncoding
+    key = encoding.encode(key) if encoding
     encoding = @valueEncoding options
     super key, options, (err, value)->
       return callback(err) if err
@@ -112,21 +121,23 @@ module.exports = class EncodingNoSQL
       callback null, value
   getBufferAsync: (key, destBuffer, options, callback) ->
     encoding = @keyEncoding options
-    key = encoding.encode(key) if keyEncoding
+    key = encoding.encode(key) if encoding
     super(key, destBuffer, options, callback)
   mGetAsync: (keys, options, callback) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
-    keys = keys.map keyEncoding.encode if keyEncoding
+    keys = keys.map keyEncoding.encode.bind(keyEncoding) if keyEncoding
+    that = @
     super keys, options, (err, result)->
       return callback(err) if err
-      if valueEncoding
-        if (options.keys)
+      options ||= {}
+      if options.keys isnt false
+        if valueEncoding or KeyEncoding
           result.map (item)->
             item.key = keyEncoding.decode item.key if keyEncoding
             item.value = valueEncoding.decode item.value if valueEncoding
-        else
-          result = result.map valueEncoding.encode
+      else
+        result = result.map valueEncoding.encode.bind(valueEncoding) if valueEncoding
       callback null, result
   putAsync: (key, value, options, callback) ->
     keyEncoding = @keyEncoding options

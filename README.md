@@ -12,7 +12,11 @@ Add the encoding ability to the [abstract-nosql](https://github.com/snowyu/abstr
 
 ## Add the Encoding ability to a nosql database
 
+    npm install nosql-encoding
+    npm install encoding-iterator
+
 ```js
+
 var Encoding = require("nosql-encoding")
 var LevelDB  = Encoding(require("leveldown-sync"))
 
