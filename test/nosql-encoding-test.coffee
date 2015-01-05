@@ -10,6 +10,7 @@ Codec           = require 'buffer-codec'
 EncodingIterator= require("encoding-iterator")
 inherits        = util.inherits
 setImmediate    = setImmediate || process.nextTick
+InvalidArgumentError = Errors.InvalidArgumentError
 
 chai.use(sinonChai)
 
@@ -244,6 +245,9 @@ describe "EncodingNoSQL", ->
 
 
   describe ".batchSync", ->
+    it "should raise error on invalid arugments", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      should.throw @db.batchSync.bind(@db), InvalidArgumentError
     it "should encode key", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       ops = [
@@ -261,6 +265,11 @@ describe "EncodingNoSQL", ->
       @db.batchSync ops
       @db._batchSync.should.have.been.calledWith expectedOps
   describe ".batch", ->
+    it "should get error on invalid arugments", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      @db.batch undefined, (err)->
+        should.exist err
+        err.invalidArgument().should.be.true
     it "should encode key sync", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       ops = [

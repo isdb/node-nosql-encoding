@@ -9,7 +9,7 @@ try
 inherits              = util.inherits
 isInheritedFrom       = util.isInheritedFrom
 inheritsDirectly      = util.inheritsDirectly
-
+isArray               = util.isArray
 
 module.exports = class EncodingNoSQL
   inherits EncodingNoSQL, AbstractNoSQL
@@ -95,7 +95,7 @@ module.exports = class EncodingNoSQL
   batchSync: (operations, options) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
-    for e in operations
+    if isArray operations then for e in operations
       continue unless typeof e is "object"
       e.key = keyEncoding.encode(e.key) if keyEncoding
       e.value = valueEncoding.encode(e.value) if valueEncoding
@@ -152,7 +152,7 @@ module.exports = class EncodingNoSQL
   batchAsync: (operations, options, callback) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
-    for e in operations
+    if isArray operations then for e in operations
       continue unless typeof e is "object"
       e.key = keyEncoding.encode(e.key) if keyEncoding
       e.value = valueEncoding.encode(e.value) if valueEncoding
