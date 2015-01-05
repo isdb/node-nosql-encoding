@@ -4,7 +4,7 @@
 
 [![NPM](https://nodei.co/npm/nosql-encoding.png?stars&downloads&downloadRank)](https://nodei.co/npm/nosql-encoding/)
 
-Add the encoding ability to the [abstract-nosql](https://github.com/snowyu/abstract-nosql) database.
+Add the encoding ability to the [abstract-nosql](https://github.com/snowyu/node-abstract-nosql) database.
 
 
 
@@ -43,7 +43,7 @@ class MyDatabase
 
 # Encoding Codec
 
-See [buffer-codec](https://github.com/snowyu/buffer-codec).
+See [buffer-codec](https://github.com/snowyu/node-buffer-codec).
 
 ## Codec List:
 
