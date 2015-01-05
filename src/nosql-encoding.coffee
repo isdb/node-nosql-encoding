@@ -31,14 +31,14 @@ module.exports = class EncodingNoSQL
     if options and options.KeyEncoding
       encoding = options.KeyEncoding
       encoding = Codec(encoding) if encoding
-    else
+    else if @_options
       encoding = @_options.keyEncoding
     encoding
   valueEncoding: (options)->
     if options and options.valueEncoding
       encoding = options.valueEncoding
       encoding = Codec(encoding) if encoding
-    else
+    else if @_options
       encoding = @_options.valueEncoding
     encoding
   setOpened: (isOpened, options)->
@@ -102,7 +102,7 @@ module.exports = class EncodingNoSQL
     super(operations, options)
   #TODO: approximateSizeSync should not be here.
   approximateSizeSync:(start, end) ->
-    keyEncoding = @keyEncoding options
+    keyEncoding = @keyEncoding()
     start = keyEncoding.encode(start) if keyEncoding and start isnt undefined
     end = keyEncoding.encode(end) if keyEncoding and end isnt undefined
     super(start, end)
@@ -159,7 +159,7 @@ module.exports = class EncodingNoSQL
     super(operations, options, callback)
   #TODO: approximateSizeAsync should not be here.
   approximateSizeAsync:(start, end) ->
-    keyEncoding = @keyEncoding options
+    keyEncoding = @keyEncoding()
     start = keyEncoding.encode(start) if keyEncoding and start isnt undefined
     end = keyEncoding.encode(end) if keyEncoding and end isnt undefined
     super(start, end)
