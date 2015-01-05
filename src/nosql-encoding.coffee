@@ -158,11 +158,11 @@ module.exports = class EncodingNoSQL
       e.value = valueEncoding.encode(e.value) if valueEncoding
     super(operations, options, callback)
   #TODO: approximateSizeAsync should not be here.
-  approximateSizeAsync:(start, end) ->
+  approximateSizeAsync:(start, end, callback) ->
     keyEncoding = @keyEncoding()
     start = keyEncoding.encode(start) if keyEncoding and start isnt undefined
     end = keyEncoding.encode(end) if keyEncoding and end isnt undefined
-    super(start, end)
+    super(start, end, callback)
   iterator: (options) ->
     options = {} unless options
     keyEncoding = @keyEncoding options
