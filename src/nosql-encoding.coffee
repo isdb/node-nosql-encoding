@@ -132,7 +132,7 @@ module.exports = class EncodingNoSQL
       return callback(err) if err
       options ||= {}
       if options.keys isnt false
-        if valueEncoding or KeyEncoding
+        if valueEncoding or keyEncoding
           result.map (item)->
             item.key = keyEncoding.decode item.key if keyEncoding
             item.value = valueEncoding.decode item.value if valueEncoding

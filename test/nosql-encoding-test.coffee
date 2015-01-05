@@ -119,7 +119,7 @@ describe "EncodingNoSQL", ->
           done()
 
   describe ".mGetSync", ->
-    it "should encode key", ->
+    it "should encode key, decode value", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       i = 0
       expectedKey = while i++ < 10
@@ -128,6 +128,15 @@ describe "EncodingNoSQL", ->
       for o, i in result
         o.key.should.be.deep.equal expectedKey[i]
         o.value.should.be.deep.equal expectedKey[i]
+    it "should encode key only", ->
+      @db.open({keyEncoding:'json'})
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      result = @db.mGetSync expectedKey
+      for o, i in result
+        o.key.should.be.deep.equal expectedKey[i]
+        o.value.should.be.deep.equal JSON.stringify expectedKey[i]
   describe ".mGet", ->
     it "should encode key sync", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
@@ -138,7 +147,16 @@ describe "EncodingNoSQL", ->
       for o, i in result
         o.key.should.be.deep.equal expectedKey[i]
         o.value.should.be.deep.equal expectedKey[i]
-    it "should encode key async", (done)->
+    it "should encode key only sync", ->
+      @db.open({keyEncoding:'json'})
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      result = @db.mGet expectedKey
+      for o, i in result
+        o.key.should.be.deep.equal expectedKey[i]
+        o.value.should.be.deep.equal JSON.stringify expectedKey[i]
+    it "should encode key, decode value async", (done)->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       i = 0
       expectedKey = while i++ < 10
@@ -148,6 +166,17 @@ describe "EncodingNoSQL", ->
         for o, i in result
           o.key.should.be.deep.equal expectedKey[i]
           o.value.should.be.deep.equal expectedKey[i]
+        done()
+    it "should encode key only async", (done)->
+      @db.open keyEncoding:'json'
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      @db.mGet expectedKey, (err, result)=>
+        should.not.exist err
+        for o, i in result
+          o.key.should.be.deep.equal expectedKey[i]
+          o.value.should.be.deep.equal JSON.stringify expectedKey[i]
         done()
 
   describe ".getSync", ->
