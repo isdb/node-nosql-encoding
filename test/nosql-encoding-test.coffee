@@ -161,6 +161,14 @@ describe "EncodingNoSQL", ->
       for o, i in result
         o.key.should.be.deep.equal expectedKey[i]
         o.value.should.be.deep.equal JSON.stringify expectedKey[i]
+    it "should decode value array", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      result = @db.mGetSync expectedKey, keys: false
+      for o, i in result
+        o.should.be.deep.equal expectedKey[i]
   describe ".mGet", ->
     it "should encode key sync", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
@@ -180,6 +188,14 @@ describe "EncodingNoSQL", ->
       for o, i in result
         o.key.should.be.deep.equal expectedKey[i]
         o.value.should.be.deep.equal JSON.stringify expectedKey[i]
+    it "should decode value array sync", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      result = @db.mGet expectedKey, keys: false
+      for o, i in result
+        o.should.be.deep.equal expectedKey[i]
     it "should encode key, decode value async", (done)->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       i = 0
@@ -202,6 +218,16 @@ describe "EncodingNoSQL", ->
           o.key.should.be.deep.equal expectedKey[i]
           o.value.should.be.deep.equal JSON.stringify expectedKey[i]
         done()
+    it "should decode value array async", (done)->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      i = 0
+      expectedKey = while i++ < 10
+        myKeyName: Math.random()
+      @db.mGet expectedKey, keys:false, (err, result)=>
+        should.not.exist err
+        for o, i in result
+          o.should.be.deep.equal expectedKey[i]
+        done()
 
   describe ".getSync", ->
     it "should encode key", ->
@@ -209,18 +235,36 @@ describe "EncodingNoSQL", ->
       expectedKey = myKeyName: Math.random()
       @db.getSync expectedKey
       @db._getSync.should.have.been.calledWith JSON.stringify expectedKey
+    it "should decode value", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      expectedKey = myKeyName: Math.random()
+      result = @db.getSync expectedKey
+      result.should.be.deep.equal expectedKey
   describe ".get", ->
     it "should encode key sync", ->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       expectedKey = myKeyName: Math.random()
       @db.get expectedKey
       @db._getSync.should.have.been.calledWith JSON.stringify expectedKey
+    it "should decode value sync", ->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      expectedKey = myKeyName: Math.random()
+      result = @db.get expectedKey
+      result.should.be.deep.equal expectedKey
     it "should encode key async", (done)->
       @db.open({keyEncoding:'json', valueEncoding: 'json'})
       expectedKey = myKeyName: Math.random()
       @db.get expectedKey, (err, result)=>
         should.not.exist err
         @db._getSync.should.have.been.calledWith JSON.stringify expectedKey
+        done()
+    it "should decode value async", (done)->
+      @db.open({keyEncoding:'json', valueEncoding: 'json'})
+      expectedKey = myKeyName: Math.random()
+      @db.get expectedKey, (err, result)=>
+        should.not.exist err
+        @db._getSync.should.have.been.calledWith JSON.stringify expectedKey
+        result.should.be.deep.equal expectedKey
         done()
 
   describe ".putSync", ->

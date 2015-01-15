@@ -75,6 +75,7 @@ module.exports = class EncodingNoSQL
   mGetSync: (keys, options) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
+    valueDecode = valueEncoding.decode.bind(valueEncoding) if valueEncoding
     keys = keys.map keyEncoding.encode.bind(keyEncoding) if keyEncoding
     result = super(keys, options)
     options ||= {}
@@ -82,9 +83,9 @@ module.exports = class EncodingNoSQL
       if valueEncoding or keyEncoding
         result.map (item)->
           item.key = keyEncoding.decode item.key if keyEncoding
-          item.value = valueEncoding.decode item.value if valueEncoding
+          item.value = valueDecode item.value if valueEncoding
     else
-      result = result.map valueEncoding.encode.bind(valueEncoding) if valueEncoding
+      result = result.map valueDecode if valueEncoding
     result
   putSync: (key, value, options) ->
     keyEncoding = @keyEncoding options
@@ -130,6 +131,7 @@ module.exports = class EncodingNoSQL
   mGetAsync: (keys, options, callback) ->
     keyEncoding = @keyEncoding options
     valueEncoding = @valueEncoding options
+    valueDecode = valueEncoding.decode.bind(valueEncoding) if valueEncoding
     keys = keys.map keyEncoding.encode.bind(keyEncoding) if keyEncoding
     that = @
     super keys, options, (err, result)->
@@ -141,7 +143,7 @@ module.exports = class EncodingNoSQL
             item.key = keyEncoding.decode item.key if keyEncoding
             item.value = valueEncoding.decode item.value if valueEncoding
       else
-        result = result.map valueEncoding.encode.bind(valueEncoding) if valueEncoding
+        result = result.map valueDecode if valueEncoding
       callback null, result
   putAsync: (key, value, options, callback) ->
     keyEncoding = @keyEncoding options
