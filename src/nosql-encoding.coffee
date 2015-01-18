@@ -1,16 +1,15 @@
 # Copyright (c) 2014 Riceball LEE, MIT License
 #xtend                 = require("xtend")
-util                  = require("abstract-object/lib/util")
 Errors                = require("abstract-object/Error")
 AbstractNoSQL         = require("abstract-nosql")
 Codec                 = require("buffer-codec")
 try
   EncodingIterator    = require("encoding-iterator")
   AbstractIterator    = EncodingIterator.super_
-inherits              = util.inherits
-isInheritedFrom       = util.isInheritedFrom
-inheritsDirectly      = util.inheritsDirectly
-isArray               = util.isArray
+inherits              = require("abstract-object/lib/util/inherits")
+isInheritedFrom       = require("abstract-object/lib/util/isInheritedFrom")
+inheritsDirectly      = require("abstract-object/lib/util/inheritsDirectly")
+isArray               = require("abstract-object/lib/util/isArray")
 InvalidArgumentError  = Errors.InvalidArgumentError
 
 module.exports = class EncodingNoSQL
