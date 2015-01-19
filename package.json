@@ -24,7 +24,7 @@
     "chai": "~1.10.0",
     "coffee-script": "~1.8.0",
     "connect-livereload": "*",
-    "encoding-iterator": ">=1.0.1",
+    "encoding-iterator": ">=1.0.2",
     "grunt": "*",
     "grunt-contrib-clean": "*",
     "grunt-contrib-coffee": "*",
