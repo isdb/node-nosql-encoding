@@ -14,6 +14,8 @@ InvalidArgumentError  = Errors.InvalidArgumentError
 module.exports = class EncodingNoSQL
   inherits EncodingNoSQL, AbstractNoSQL
 
+  @EncodingIterator: EncodingIterator
+
   constructor: (aClass)->
     if (this not instanceof EncodingNoSQL)
       vParentClass = isInheritedFrom aClass, AbstractNoSQL
