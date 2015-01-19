@@ -13,12 +13,11 @@ Add the encoding ability to the [abstract-nosql](https://github.com/snowyu/node-
 ## Add the Encoding ability to a nosql database
 
     npm install nosql-encoding
-    npm install encoding-iterator
 
 ```js
 
-var Encoding = require("nosql-encoding")
-var LevelDB  = Encoding(require("leveldown-sync"))
+var addEncodingFeatureTo = require("nosql-encoding")
+var LevelDB  = addEncodingFeatureTo(require("leveldown-sync"))
 
 var db = LevelDB('location')
 db.open({keyEncoding: 'text', valueEncoding: 'json'})
@@ -27,37 +26,13 @@ db.open({keyEncoding: 'text', valueEncoding: 'json'})
 
 ## Develop a nosql database with encoding ability
 
+There is no need to force inherited from the Encoding class.
 
-Coffee-Script:
-
-```coffee
-
-inherits      = require('abstract-object/util').inherits
-EncodingNoSQL = require('nosql-encoding')
-
-class MyDatabase
-    inherits MyDatabase, EncodingNoSQL
-
-```
+Please let the user decide whether to use the Encoding feature.
 
 
 # Encoding Codec
 
 See [buffer-codec](https://github.com/snowyu/node-buffer-codec).
-
-## Codec List:
-
-* Text Codec: encode via toString() , decode return the data directly.
-  * Json Codec: encode via JSON.stringify(.toJSON), decode via JSON.parse
-  * Hex Codec: hex string to Binary.
-* Binary Codec:
-  * encodeBuffer: encode string or array to a buffer.
-  * decodeBuffer: return the buffer directly.
-  * encodeString: 
-    * result is the same string if value is string
-    * result is ascii string if value is array, the number element in array saved is (element & 0xFF)
-      if element is not number, saved 0 instead.
-  * decodeString: return the same string.
-
 
 
