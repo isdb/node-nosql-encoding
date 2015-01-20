@@ -4,7 +4,7 @@ Errors                = require("abstract-object/Error")
 AbstractNoSQL         = require("abstract-nosql")
 Codec                 = require("buffer-codec")
 EncodingIterator      = require("encoding-iterator")
-AbstractIterator      = EncodingIterator.super_
+#AbstractIterator      = EncodingIterator.super_
 inherits              = require("abstract-object/lib/util/inherits")
 isInheritedFrom       = require("abstract-object/lib/util/isInheritedFrom")
 inheritsDirectly      = require("abstract-object/lib/util/inheritsDirectly")
@@ -18,14 +18,15 @@ module.exports = class EncodingNoSQL
 
   constructor: (aClass)->
     if (this not instanceof EncodingNoSQL)
-      vParentClass = isInheritedFrom aClass, AbstractNoSQL
+      if isInheritedFrom aClass, 'EncodingNoSQL'
+        throw new InvalidArgumentError("class has already been encoding-able")
+      vParentClass = isInheritedFrom aClass, 'AbstractNoSQL'
       if vParentClass
-        if vParentClass isnt EncodingNoSQL
-          inheritsDirectly vParentClass, EncodingNoSQL
-          vIteratorClass = aClass::IteratorClass
-          vIteratorClass = isInheritedFrom vIteratorClass, AbstractIterator if vIteratorClass
-          if vIteratorClass and vIteratorClass isnt EncodingIterator
-            inheritsDirectly vIteratorClass, EncodingIterator
+        inheritsDirectly vParentClass, EncodingNoSQL
+        vIteratorClass = aClass::IteratorClass
+        if vIteratorClass and not isInheritedFrom vIteratorClass, 'EncodingIterator'
+          vIteratorClass = isInheritedFrom vIteratorClass, 'AbstractIterator'
+          inheritsDirectly vIteratorClass, EncodingIterator if vIteratorClass
         return aClass
       else
         throw new InvalidArgumentError("class should be inherited from AbstractNoSQL")
