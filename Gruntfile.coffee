@@ -35,7 +35,7 @@ module.exports = (grunt) ->
           ui: 'bdd'
           quiet: false
           require: 'coffee-script/register'
-          #reporter: 'dot'
+          reporter: 'dot'
           check: ['src/**/*.coffee', 'test/**/*.js', 'test/**/*.coffee']
         src: ['test/**/*.coffee']
 
@@ -65,7 +65,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-newer')
 
-  grunt.registerTask('build', ['newer:coffee', 'copy'])
+  grunt.registerTask('build', ['newer:coffee', 'newer:copy'])
   grunt.registerTask('rebuild', ['clean', 'build'])
   grunt.registerTask('test', ['build', 'mochaTest'])
   grunt.registerTask('watch', ['watch'])
