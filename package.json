@@ -1,6 +1,6 @@
 {
   "name": "nosql-encoding",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "add the encoding ability to abstract-nosql database.",
   "homepage": "https://github.com/snowyu/node-nosql-encoding",
   "main": "./index",
