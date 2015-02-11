@@ -16,19 +16,17 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "abstract-object": "~1.8.1",
-    "abstract-nosql": "~2.0.2",
-    "buffer-codec": "~1.6.0",
+    "abstract-object": "~1.9.1",
+    "abstract-nosql": "~2.0.3",
+    "buffer-codec": "~1.6.1",
     "encoding-iterator": "~1.0.3"
   },
   "devDependencies": {
     "chai": "~1.10.0",
-    "coffee-script": "~1.8.0",
     "connect-livereload": "*",
     "grunt": "*",
     "grunt-contrib-clean": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-contrib-concat": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
@@ -38,7 +36,6 @@
     "grunt-release": "*",
     "grunt-rev": "*",
     "grunt-saucelabs": "*",
-    "grunt-usemin": "*",
     "mocha": "~2.0.1",
     "sinon": "~1.12.2",
     "sinon-chai": "~2.6.0",
