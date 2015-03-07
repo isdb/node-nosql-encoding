@@ -5,12 +5,12 @@ should          = chai.should()
 expect          = chai.expect
 EncodingNoSQL   = require '../src/nosql-encoding'
 AbstractNoSQL   = require 'abstract-nosql'
-Errors          = require 'abstract-object/Error'
-util            = require 'abstract-object/util'
+Errors          = require 'abstract-error'
+util            = require 'util-ex'
 Codec           = require 'buffer-codec'
-EncodingIterator= require("encoding-iterator")
-inherits        = util.inherits
-isInheritedFrom = util.isInheritedFrom
+EncodingIterator= require 'encoding-iterator'
+inherits        = require 'inherits-ex'
+isInheritedFrom = inherits.is
 setImmediate    = setImmediate || process.nextTick
 InvalidArgumentError = Errors.InvalidArgumentError
 
